@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-top: 40px;
+      background-color: #f8f9fa;
+    }
+    .card {
+      max-width: 600px;
+      margin: auto;
+    }
+    textarea {
+      height: 200px;
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card shadow p-4">
+      <h2 class="mb-4 text-center">Password Generator</h2>
+
+      <div class="mb-3">
+        <label for="length" class="form-label">Password Length</label>
+        <input type="number" class="form-control" id="length" value="12" min="1" max="100">
+      </div>
+
+      <div class="mb-3">
+        <label for="count" class="form-label">Number of Passwords</label>
+        <input type="number" class="form-control" id="count" value="1" min="1" max="100">
+      </div>
+
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="includeNumbers" checked>
+        <label class="form-check-label" for="includeNumbers">Include Numbers</label>
+      </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="includeLowercase" checked>
+        <label class="form-check-label" for="includeLowercase">Include Lowercase Letters</label>
+      </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="includeUppercase" checked>
+        <label class="form-check-label" for="includeUppercase">Include Uppercase Letters</label>
+      </div>
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="includeSpecial">
+        <label class="form-check-label" for="includeSpecial">Include Special Characters</label>
+      </div>
+
+      <div class="mb-3">
+        <label for="customChars" class="form-label">Custom Characters (Optional)</label>
+        <input type="text" class="form-control" id="customChars" placeholder="e.g. @#$%">
+      </div>
+
+      <div class="d-flex mb-3 gap-2">
+        <button class="btn btn-primary w-100" onclick="generatePasswords()">Generate</button>
+        <button class="btn btn-secondary w-100" onclick="copyPasswords()">Copy</button>
+      </div>
+
+      <textarea class="form-control" id="output" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    function generatePasswords() {
+      const length = parseInt(document.getElementById('length').value);
+      const count = parseInt(document.getElementById('count').value);
+      const includeNumbers = document.getElementById('includeNumbers').checked;
+      const includeLowercase = document.getElementById('includeLowercase').checked;
+      const includeUppercase = document.getElementById('includeUppercase').checked;
+      const includeSpecial = document.getElementById('includeSpecial').checked;
+      const customChars = document.getElementById('customChars').value;
+
+      let charset = '';
+      if (includeNumbers) charset += '0123456789';
+      if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+      if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      if (includeSpecial) charset += '!@#$%^&*()-_=+[]{}|;:,.<>?/~';
+      if (customChars) charset += customChars;
+
+      if (charset.length === 0) {
+        alert('Please select at least one character set!');
+        return;
+      }
+
+      let output = '';
+      for (let i = 0; i < count; i++) {
+        let password = '';
+        for (let j = 0; j < length; j++) {
+          const randomIndex = Math.floor(Math.random() * charset.length);
+          password += charset[randomIndex];
+        }
+        output += password + '\n';
+      }
+
+      document.getElementById('output').value = output.trim();
+    }
+
+    function copyPasswords() {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+      alert('Passwords copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
